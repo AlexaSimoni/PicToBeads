@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212"
+    tools:context=".MainActivity">
+
+    <!-- 1. UNIVERSAL HEADER BAR -->
+    <LinearLayout
+        android:id="@+id/header_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/gradient_blue"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_header_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            app:srcCompat="@drawable/baseline_arrow_back_ios_24"
+            app:tint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tv_header_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="Studio"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <!-- Placeholder for header actions (Upload, Heart, RemoveBG, etc.) -->
+        <LinearLayout
+            android:id="@+id/header_actions_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
+
+        <ImageButton
+            android:id="@+id/btn_header_settings"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Settings"
+            app:srcCompat="@drawable/outline_more_vert_24"
+            app:tint="#FFFFFF" />
+    </LinearLayout>
+
+    <!-- 2. COMMON BEAD SELECTOR -->
+    <LinearLayout
+        android:id="@+id/bead_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:background="@drawable/gradient_blue"
+        app:layout_constraintTop_toBottomOf="@id/header_bar">
+
+        <ImageButton android:id="@+id/btn_bead_1" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_margin="2dp" android:background="@android:color/transparent" app:srcCompat="@drawable/b02_sq_neg" android:scaleType="fitCenter" />
+        <ImageButton android:id="@+id/btn_bead_2" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_margin="2dp" android:background="@android:color/transparent" app:srcCompat="@drawable/b02_neg" android:scaleType="fitCenter" />
+        <ImageButton android:id="@+id/btn_bead_3" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_margin="2dp" android:background="@android:color/transparent" app:srcCompat="@drawable/b03_neg" android:scaleType="fitCenter" />
+        <ImageButton android:id="@+id/btn_bead_4" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_margin="2dp" android:background="@android:color/transparent" app:srcCompat="@drawable/b05_neg" android:scaleType="fitCenter" />
+        <ImageButton android:id="@+id/btn_bead_5" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_margin="2dp" android:background="@android:color/transparent" app:srcCompat="@drawable/b08_w_neg" android:scaleType="fitCenter" />
+        <ImageButton android:id="@+id/btn_bead_6" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_margin="2dp" android:background="@android:color/transparent" app:srcCompat="@drawable/b08_neg" android:scaleType="fitCenter" />
+        <ImageButton android:id="@+id/btn_bead_7" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:layout_margin="2dp" android:background="@android:color/transparent" app:srcCompat="@drawable/b09_neg" android:scaleType="fitCenter" />
+    </LinearLayout>
+
+    <!-- 3. MODE-SPECIFIC TOOLBAR (1, 2, 3 buttons placeholder) -->
+    <FrameLayout
+        android:id="@+id/pattern_toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_blue"
+        app:layout_constraintTop_toBottomOf="@id/bead_button_container" />
+
+    <!-- 4. CENTERED GRID WORKSPACE -->
+    <FrameLayout
+        android:id="@+id/grid_workspace"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/pattern_toolbar_container"
+        app:layout_constraintBottom_toTopOf="@id/bottom_controls_container">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <FrameLayout
+                    android:id="@+id/grid_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp" />
+            </HorizontalScrollView>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- 5. MODE-SPECIFIC BOTTOM CONTROLS (Slider placeholder) -->
+    <FrameLayout
+        android:id="@+id/bottom_controls_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_blue"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- OPTIONAL PREVIEW OVERLAY -->
+    <ImageView
+        android:id="@+id/preview_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="12dp"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottom_controls_container"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

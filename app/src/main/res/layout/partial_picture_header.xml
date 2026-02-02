@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/btn_header_heart"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@android:drawable/btn_star_big_on"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/btn_header_upload"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/outline_image_24"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/btn_header_undo"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/outline_arrow_top_left_24"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/btn_header_redo"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/outline_arrow_top_right_24"
+        app:tint="#FFFFFF" />
+
+    <ImageButton
+        android:id="@+id/btn_header_save"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/outline_save_24"
+        app:tint="#FFFFFF" />
+
+</LinearLayout>
