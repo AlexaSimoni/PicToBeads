@@ -1,4 +1,4 @@
-package com.example.b;
+package com.example.pictobeads;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,11 +6,16 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * MainActivity is now the "Front Door" of your app.
- * It shows the selection menu (Bracelet vs Picture).
+ * MainActivity serves as the entry point of the application, providing navigation to different design modules.
  */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Initializes the activity, sets the content view, and configures navigation buttons.
+     * Input: savedInstanceState - Bundle containing the activity's previously saved state.
+     * Output: None.
+     * Algorithm: Inflates the activity_start layout, finds the bracelet and picture buttons by their IDs, and attaches click listeners that start their respective activities.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

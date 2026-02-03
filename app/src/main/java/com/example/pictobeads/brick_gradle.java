@@ -1,25 +1,41 @@
-package com.example.b;
+package com.example.pictobeads;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.View;
 
-public class missing_brick_gradle extends b_gradle {
+/**
+ * A grid view that renders beads in a brick-like (staggered) pattern.
+ */
+public class brick_gradle extends b_gradle {
     private Paint paint;
     private Paint cellPaint;
     private Paint dotPaint;
     private Paint woodPaint;
     private Paint greyLinePaint;
     private Paint whiteLinePaint;
+    private boolean isVertical;
 
-    public missing_brick_gradle(Context context, int columns, int rows, int resolution, int g_type) {
+    /**
+     * Constructs a brick grid view.
+     * Input: context, columns, rows, resolution, g_type, isVertical.
+     * Output: A new brick_gradle instance.
+     * Algorithm: Calls super constructor and initializes Paint objects.
+     */
+    public brick_gradle(Context context, int columns, int rows, int resolution, int g_type, boolean isVertical) {
         super(context, columns, rows, resolution, g_type);
+        this.isVertical = isVertical;
         init();
     }
 
+    /**
+     * Initializes Paint objects for drawing.
+     * Input: None.
+     * Output: None.
+     * Algorithm: Configures Paint objects for borders, fills, and bead effects.
+     */
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
@@ -52,58 +68,64 @@ public class missing_brick_gradle extends b_gradle {
         whiteLinePaint.setStrokeWidth(1.5f);
     }
 
+    /**
+     * Maps image pixels to the staggered grid cells.
+     * Input: bitmap - The source bitmap.
+     * Output: None.
+     * Algorithm: Iterates through each cell, calculates a staggered (x,y) offset based on row/column index, maps to a (u,v) coordinate, and samples the bitmap.
+     */
     @Override
     public void setImageData(Bitmap bitmap) {
         if (bitmap == null) return;
-        float gridWidth = columns * resolution + resolution / 2f;
-        float gridHeight = rows * resolution;
+
+        float gridWidth = isVertical ? columns * resolution : columns * resolution + resolution / 2f;
+        float gridHeight = isVertical ? rows * resolution + resolution / 2f : rows * resolution;
+
         for (int r = 0; r < rows; r++) {
-            float xOffset = (r % 2 == 1) ? resolution / 2f : 0;
             for (int c = 0; c < columns; c++) {
-                if (shouldBeMissing(r, c)) {
-                    pixelColors[r][c] = 0;
-                    continue;
-                }
+                float xOffset = (!isVertical && r % 2 == 1) ? resolution / 2f : 0;
+                float yOffset = (isVertical && c % 2 == 1) ? resolution / 2f : 0;
+
                 float centerX = c * resolution + xOffset + resolution / 2f;
-                float centerY = r * resolution + resolution / 2f;
+                float centerY = r * resolution + yOffset + resolution / 2f;
+
                 float u = Math.min(1f, Math.max(0f, centerX / gridWidth));
                 float v = Math.min(1f, Math.max(0f, centerY / gridHeight));
+
                 int bX = (int) (u * (bitmap.getWidth() - 1));
                 int bY = (int) (v * (bitmap.getHeight() - 1));
+                
                 pixelColors[r][c] = bitmap.getPixel(bX, bY);
             }
         }
         invalidate();
     }
 
-    private boolean shouldBeMissing(int r, int c) {
-        int patternRow = r % 4;
-        if (patternRow == 1) return c % 2 == 0;
-        if (patternRow == 3) return c % 2 == 1;
-        return false;
-    }
-
+    /**
+     * Renders the staggered bead grid onto the canvas.
+     * Input: canvas - The canvas to draw on.
+     * Output: None.
+     * Algorithm: Iterates through each cell, applies a staggered offset, calculates drawing bounds, and draws the bead with visual effects.
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         if (resolution <= 0) return;
+
         float padding = 2f;
         String shape = currentBead != null ? currentBead.getShape() : "round edged";
 
         for (int r = 0; r < rows; r++) {
-            float xOffset = (r % 2 == 1) ? resolution / 2f : 0;
             for (int c = 0; c < columns; c++) {
-                if (shouldBeMissing(r, c)) continue;
+                float xOffset = (!isVertical && r % 2 == 1) ? resolution / 2f : 0;
+                float yOffset = (isVertical && c % 2 == 1) ? resolution / 2f : 0;
 
                 float l = c * resolution + xOffset + padding;
-                float t = r * resolution + padding;
+                float t = r * resolution + yOffset + padding;
                 float ri = l + resolution - 2 * padding;
                 float bo = t + resolution - 2 * padding;
 
-                // Odd rows (1, 3 -> index 0, 2) act as vertical grid
-                // Even rows (2, 4 -> index 1, 3) act as horizontal grid
-                boolean horizOrient = (r % 2 != 0); 
-
                 if (currentBead != null) {
+                    boolean horizOrient = !isVertical;
                     float hInset = currentBead.getHorizontalInset(resolution, horizOrient);
                     float vInset = currentBead.getVerticalInset(resolution, horizOrient);
                     l += hInset; ri -= hInset; t += vInset; bo -= vInset;
@@ -128,10 +150,10 @@ public class missing_brick_gradle extends b_gradle {
                         }
 
                         if (currentBead.hasSquareStrokes()) {
-                            if (horizOrient) { // Lines are vertical
+                            if (!isVertical) { // Horizontal: vertical lines
                                 canvas.drawLine(l + (ri-l) * 0.35f, t + 4, l + (ri-l) * 0.35f, bo - 4, greyLinePaint);
                                 canvas.drawLine(l + (ri-l) * 0.65f, t + 4, l + (ri-l) * 0.65f, bo - 4, whiteLinePaint);
-                            } else { // Lines are horizontal
+                            } else { // Vertical: horizontal lines
                                 canvas.drawLine(l + 4, t + (bo-t) * 0.35f, ri - 4, t + (bo-t) * 0.35f, greyLinePaint);
                                 canvas.drawLine(l + 4, t + (bo-t) * 0.65f, ri - 4, t + (bo-t) * 0.65f, whiteLinePaint);
                             }
@@ -141,11 +163,17 @@ public class missing_brick_gradle extends b_gradle {
                         drawBead(canvas, l, t, ri, bo, shape, cellPaint);
                     }
                 }
-                canvas.drawRect(c * resolution + xOffset, r * resolution, c * resolution + xOffset + resolution, r * resolution + resolution, paint);
+                canvas.drawRect(c * resolution + xOffset, r * resolution + yOffset, c * resolution + xOffset + resolution, r * resolution + yOffset + resolution, paint);
             }
         }
     }
 
+    /**
+     * Draws a single bead shape.
+     * Input: canvas, bounds (l,t,r,b), shape string, paint object.
+     * Output: None.
+     * Algorithm: Draws a rect, oval, or roundrect based on the shape string.
+     */
     private void drawBead(Canvas canvas, float l, float t, float r, float b, String shape, Paint p) {
         if (shape.equals("square")) {
             canvas.drawRect(l, t, r, b, p);
@@ -157,10 +185,16 @@ public class missing_brick_gradle extends b_gradle {
         }
     }
 
+    /**
+     * Determines the view's dimensions.
+     * Input: widthMeasureSpec, heightMeasureSpec.
+     * Output: None.
+     * Algorithm: Sets the measured dimension based on column/row count, resolution, and staggered offsets.
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = (int) (columns * resolution + resolution / 2f);
-        int desiredHeight = rows * resolution;
+        int desiredWidth = (int) (columns * resolution + (!isVertical ? resolution / 2f : 0));
+        int desiredHeight = (int) (rows * resolution + (isVertical ? resolution / 2f : 0));
         setMeasuredDimension(resolveSize(desiredWidth, widthMeasureSpec), 
                              resolveSize(desiredHeight, heightMeasureSpec));
     }

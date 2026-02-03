@@ -1,4 +1,4 @@
-package com.example.b;
+package com.example.pictobeads;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +24,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.InputStream;
 import java.util.List;
 
+/**
+ * Activity for creating mosaic patterns from images.
+ */
 public class PictureActivity extends AppCompatActivity {
 
     private b_gradle currentGridView;
@@ -39,6 +42,12 @@ public class PictureActivity extends AppCompatActivity {
     private Bead selectedBead = null;
     private boolean isRemoveBgActive = false;
 
+    /**
+     * Initializes the activity, sets up UI components and event listeners.
+     * Input: savedInstanceState - Bundle containing the activity's previously saved state.
+     * Output: None.
+     * Algorithm: Sets the layout, initializes views, inflates partial layouts, and attaches listeners for dimensions, zoom, and image selection.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +134,12 @@ public class PictureActivity extends AppCompatActivity {
         updateGrid();
     }
 
+    /**
+     * Recalculates and redraws the grid based on current dimensions, bead type, and pattern.
+     * Input: None.
+     * Output: None.
+     * Algorithm: Calculates columns and rows from mm inputs, replaces the grid container content with a new specialized view, and processes the image bitmap for the new grid.
+     */
     private void updateGrid() {
         if (selectedBead == null) return;
         float bSize = selectedBead.getSize();
@@ -149,6 +164,12 @@ public class PictureActivity extends AppCompatActivity {
         if (b != null) currentGridView.setImageData(b);
     }
 
+    /**
+     * Updates the grid with a new bitmap image.
+     * Input: bitmap - The source image for the mosaic pattern.
+     * Output: None.
+     * Algorithm: Sets the bitmap to the preview image view and triggers a grid update.
+     */
     private void updateGridWithBitmap(Bitmap bitmap) {
         if (bitmap == null) return;
         previewImage.setImageBitmap(bitmap);
@@ -156,6 +177,12 @@ public class PictureActivity extends AppCompatActivity {
         updateGrid();
     }
 
+    /**
+     * Handles the image selected from the gallery.
+     * Input: uri - The URI of the selected image.
+     * Output: None.
+     * Algorithm: Opens an input stream for the URI, decodes it into a bitmap, and updates the grid.
+     */
     private void handleSelectedImage(Uri uri) {
         try {
             InputStream is = getContentResolver().openInputStream(uri);

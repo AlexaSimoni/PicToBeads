@@ -1,4 +1,4 @@
-package com.example.b;
+package com.example.pictobeads;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,6 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.InputStream;
 import java.util.List;
 
+import com.example.pictobeads.R;
+
+/**
+ * Activity for designing bead bracelets with different patterns.
+ */
 public class BraceletActivity extends AppCompatActivity {
 
     private b_gradle currentGridView;
@@ -35,6 +40,12 @@ public class BraceletActivity extends AppCompatActivity {
     private int currentPatternType = 0; 
     private Bead selectedBead = null;
 
+    /**
+     * Initializes the bracelet design activity and UI components.
+     * Input: savedInstanceState - Bundle with saved state.
+     * Output: None.
+     * Algorithm: Sets the layout, initializes views, inflates partial layouts, and sets up listeners for pattern selection and width adjustment.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +103,12 @@ public class BraceletActivity extends AppCompatActivity {
         updateGrid();
     }
 
+    /**
+     * Rebuilds the bracelet grid pattern.
+     * Input: None.
+     * Output: None.
+     * Algorithm: Calculates columns and rows based on fixed length and adjustable width, instantiates the appropriate custom view, and applies selected bead and image data.
+     */
     private void updateGrid() {
         if (selectedBead == null) return;
         float bSize = selectedBead.getSize();
@@ -111,6 +128,12 @@ public class BraceletActivity extends AppCompatActivity {
         if (b != null) currentGridView.setImageData(b);
     }
 
+    /**
+     * Updates the grid with a new image bitmap.
+     * Input: bitmap - The source image for the bracelet.
+     * Output: None.
+     * Algorithm: Updates the preview image view and triggers a grid update.
+     */
     private void updateGridWithBitmap(Bitmap bitmap) {
         if (bitmap == null) return;
         previewImage.setImageBitmap(bitmap);
@@ -118,6 +141,12 @@ public class BraceletActivity extends AppCompatActivity {
         if (currentGridView != null) currentGridView.setImageData(bitmap);
     }
 
+    /**
+     * Handles image selection from URI.
+     * Input: uri - image URI.
+     * Output: None.
+     * Algorithm: Decodes bitmap from stream and updates the grid.
+     */
     private void handleSelectedImage(Uri uri) {
         try {
             InputStream is = getContentResolver().openInputStream(uri);

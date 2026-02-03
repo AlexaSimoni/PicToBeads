@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.b"
+    namespace = "com.example.pictobeads"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.b"
+        applicationId = "com.example.pictobeads"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

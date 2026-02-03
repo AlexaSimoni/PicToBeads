@@ -12,6 +12,7 @@
         android:layout_height="48dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
+        android:importantForAccessibility="no"
         app:srcCompat="@drawable/brick_v_neg"
         android:scaleType="fitCenter" />
 
@@ -21,6 +22,7 @@
         android:layout_height="48dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
+        android:importantForAccessibility="no"
         app:srcCompat="@drawable/brick_h_neg"
         android:scaleType="fitCenter" />
 
@@ -30,6 +32,7 @@
         android:layout_height="48dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
+        android:importantForAccessibility="no"
         app:srcCompat="@drawable/rem_bg_neg"
         android:scaleType="fitCenter" />
 </LinearLayout>

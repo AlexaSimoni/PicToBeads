@@ -1,12 +1,14 @@
-package com.example.b;
+package com.example.pictobeads;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.View;
 
+/**
+ * A grid view that renders beads in a standard square (checkerboard) pattern.
+ */
 public class math_gradle extends b_gradle {
     private Paint paint;
     private Paint cellPaint;
@@ -15,11 +17,23 @@ public class math_gradle extends b_gradle {
     private Paint greyLinePaint;
     private Paint whiteLinePaint;
 
+    /**
+     * Initializes the math grid view and its paint components.
+     * Input: context - context, columns - grid width, rows - grid height, resolution - visual scale, g_type - pattern type.
+     * Output: math_gradle instance.
+     * Algorithm: Calls super constructor and executes init() to configure Paint objects for drawing.
+     */
     public math_gradle(Context context, int columns, int rows, int resolution, int g_type) {
         super(context, columns, rows, resolution, g_type);
         init();
     }
 
+    /**
+     * Configures the visual appearance of the grid elements.
+     * Input: None.
+     * Output: None.
+     * Algorithm: Instantiates multiple Paint objects for drawing grid lines, bead fills, wood textures, and highlights.
+     */
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
@@ -52,6 +66,12 @@ public class math_gradle extends b_gradle {
         whiteLinePaint.setStrokeWidth(1.5f);
     }
 
+    /**
+     * Samples image colors to populate the mosaic grid.
+     * Input: bitmap - source image.
+     * Output: None.
+     * Algorithm: Iterates through each cell, calculates proportional coordinates (u,v), samples the nearest bitmap pixel, and stores it in pixelColors.
+     */
     @Override
     public void setImageData(Bitmap bitmap) {
         if (bitmap == null) return;
@@ -69,6 +89,12 @@ public class math_gradle extends b_gradle {
         invalidate();
     }
 
+    /**
+     * Renders the bead pattern on the screen.
+     * Input: canvas - canvas to draw on.
+     * Output: None.
+     * Algorithm: Loops through cells, calculates physical bounds with insets, draws the bead shape, and applies texture overlays like dots or wood strokes.
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         if (resolution <= 0) return;
@@ -121,6 +147,12 @@ public class math_gradle extends b_gradle {
         }
     }
 
+    /**
+     * Executes drawing logic for a specific geometric bead shape.
+     * Input: canvas, bounds (l,t,r,b), shape - shape string, p - Paint object.
+     * Output: None.
+     * Algorithm: Switches on the shape string to draw a rectangle, oval, or rounded rectangle using the provided paint.
+     */
     private void drawBead(Canvas canvas, float l, float t, float r, float b, String shape, Paint p) {
         if (shape.equals("square")) {
             canvas.drawRect(l, t, r, b, p);
@@ -132,6 +164,12 @@ public class math_gradle extends b_gradle {
         }
     }
 
+    /**
+     * Measures the view to fit the grid content.
+     * Input: widthMeasureSpec, heightMeasureSpec.
+     * Output: None.
+     * Algorithm: Calculates pixel dimensions as (columns * resolution) and (rows * resolution), resolving them according to Android measure specifications.
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(resolveSize(columns * resolution, widthMeasureSpec), 

@@ -1,4 +1,4 @@
-package com.example.b;
+package com.example.pictobeads;
 
 import org.junit.Test;
 
