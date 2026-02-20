@@ -7,10 +7,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 /**
- * A custom grid view that renders beads in a staggered brick pattern with intentional gaps.
- * If a row ends with a missing bead, an extra bead is added to ensure the row ends visibly.
+ * A custom grid view that renders beads in a vertical brick pattern (staggered columns)
+ * with a 3-row repeating missing bead pattern.
  */
-public class missing_brick_gradle extends b_gradle {
+public class vertical_staggered_missing_gradle extends b_gradle {
     private Paint paint;
     private Paint cellPaint;
     private Paint dotPaint;
@@ -19,23 +19,21 @@ public class missing_brick_gradle extends b_gradle {
     private Paint whiteLinePaint;
 
     /**
-     * Initializes the staggered grid view with missing bricks and potential extra end-beads.
-     * Input: context - application context, columns - base number of beads wide, rows - number of beads high, resolution - size of one bead, g_type - pattern type.
+     * Initializes the vertical staggered grid view.
+     * Input: context - context, columns - width, rows - height, resolution - scale, g_type - type.
      * Output: None.
-     * Algorithm: Calls super constructor, re-allocates pixelColors to allow for one extra column (n+1), and initializes paint objects.
+     * Algorithm: Calls super constructor and initializes paint objects.
      */
-    public missing_brick_gradle(Context context, int columns, int rows, int resolution, int g_type) {
+    public vertical_staggered_missing_gradle(Context context, int columns, int rows, int resolution, int g_type) {
         super(context, columns, rows, resolution, g_type);
-        // Re-allocate to handle up to 'columns' index (total columns + 1)
-        this.pixelColors = new int[rows][columns + 1];
         init();
     }
 
     /**
-     * Configures the Paint objects used for rendering.
+     * Configures drawing paints.
      * Input: None.
      * Output: None.
-     * Algorithm: Instantiates and sets properties like anti-aliasing, color, and stroke style for various UI elements.
+     * Algorithm: Sets up colors and styles for beads and textures.
      */
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -70,27 +68,29 @@ public class missing_brick_gradle extends b_gradle {
     }
 
     /**
-     * Processes an image to determine grid cell colors, including extra end-beads.
-     * Input: bitmap - the source image to be converted.
+     * Maps bitmap pixels to grid cells using vertical stagger and missing pattern.
+     * Input: bitmap - source image.
      * Output: None.
-     * Algorithm: Calculates grid dimensions, iterates through non-missing cells (up to columns index), maps their center to image coordinates, and samples pixel colors.
+     * Algorithm: Calculates bounds, iterates through cells, skips missing ones based on 3-row pattern, and samples image pixels.
      */
     @Override
     public void setImageData(Bitmap bitmap) {
         if (bitmap == null) return;
-        float gridWidth = (columns + 1) * resolution + resolution / 2f;
-        float gridHeight = rows * resolution;
+        float gridWidth = columns * resolution;
+        float gridHeight = rows * resolution + resolution / 2f;
         for (int r = 0; r < rows; r++) {
-            float xOffset = (r % 2 == 0) ? resolution / 2f : 0;
-            for (int c = 0; c <= columns; c++) {
+            for (int c = 0; c < columns; c++) {
                 if (shouldBeMissing(r, c)) {
                     pixelColors[r][c] = 0;
                     continue;
                 }
-                float centerX = c * resolution + xOffset + resolution / 2f;
-                float centerY = r * resolution + resolution / 2f;
+                float yOffset = (c % 2 == 1) ? resolution / 2f : 0;
+                float centerX = c * resolution + resolution / 2f;
+                float centerY = r * resolution + yOffset + resolution / 2f;
+                
                 float u = Math.min(1f, Math.max(0f, centerX / gridWidth));
                 float v = Math.min(1f, Math.max(0f, centerY / gridHeight));
+                
                 int bX = (int) (u * (bitmap.getWidth() - 1));
                 int bY = (int) (v * (bitmap.getHeight() - 1));
                 pixelColors[r][c] = bitmap.getPixel(bX, bY);
@@ -100,32 +100,24 @@ public class missing_brick_gradle extends b_gradle {
     }
 
     /**
-     * Determines if a specific grid cell should be empty, handling the extra end-bead logic.
+     * Determines if a specific bead should be missing based on a 3-row repeating pattern.
      * Input: r - row index, c - column index.
-     * Output: boolean - true if the cell is missing.
-     * Algorithm: Checks row and column modulo values. For the extra column (c == columns), returns false only if the previous bead was missing.
+     * Output: boolean - true if missing.
+     * Algorithm: Row 1 (idx 0) is full. Row 2 (idx 1) has even columns removed. Row 3 (idx 2) has odd columns removed.
      */
     private boolean shouldBeMissing(int r, int c) {
-        int patternRow = r % 4;
-        
-        if (c == columns) {
-            // Row 2: index 1, Row 4: index 3
-            // Add extra bead only if the pattern would have ended the row with a missing bead.
-            if (patternRow == 1) return (columns - 1) % 2 != 0; // If index 'columns-1' is odd, it stayed, so 'columns' is missing.
-            if (patternRow == 3) return (columns - 1) % 2 == 0; // If index 'columns-1' is even, it stayed, so 'columns' is missing.
-            return true; // No extra bead for Row 1 and 3.
-        }
-
-        if (patternRow == 1) return c % 2 == 0;
-        if (patternRow == 3) return c % 2 == 1;
+        int patternRow = r % 3;
+        if (patternRow == 0) return false; // Row 1: Full
+        if (patternRow == 1) return (c % 2 == 0); // Row 2: Even columns removed
+        if (patternRow == 2) return (c % 2 == 1); // Row 3: Odd columns removed
         return false;
     }
 
     /**
-     * Renders the custom grid pattern on a Canvas, including extra end-beads.
-     * Input: canvas - the destination for drawing operations.
+     * Renders the grid with vertical stagger and 3-row missing pattern.
+     * Input: canvas - destination.
      * Output: None.
-     * Algorithm: Iterates through visible cells (up to columns index), calculates drawing coordinates with staggered offsets and bead insets, and draws bead shapes and textures.
+     * Algorithm: Loops through cells, applies column-based Y offset, skips patterned missing beads, and draws.
      */
     @Override
     protected void onDraw(Canvas canvas) {
@@ -134,20 +126,19 @@ public class missing_brick_gradle extends b_gradle {
         String shape = currentBead != null ? currentBead.getShape() : "round edged";
 
         for (int r = 0; r < rows; r++) {
-            float xOffset = (r % 2 == 0) ? resolution / 2f : 0;
-            for (int c = 0; c <= columns; c++) {
+            for (int c = 0; c < columns; c++) {
                 if (shouldBeMissing(r, c)) continue;
+                
+                float yOffset = (c % 2 == 1) ? resolution / 2f : 0;
 
-                float l = c * resolution + xOffset + padding;
-                float t = r * resolution + padding;
+                float l = c * resolution + padding;
+                float t = r * resolution + yOffset + padding;
                 float ri = l + resolution - 2 * padding;
                 float bo = t + resolution - 2 * padding;
 
-                boolean horizOrient = true; 
-
                 if (currentBead != null) {
-                    float hInset = currentBead.getHorizontalInset(resolution, horizOrient);
-                    float vInset = currentBead.getVerticalInset(resolution, horizOrient);
+                    float hInset = currentBead.getHorizontalInset(resolution, false);
+                    float vInset = currentBead.getVerticalInset(resolution, false);
                     l += hInset; ri -= hInset; t += vInset; bo -= vInset;
                 }
 
@@ -170,15 +161,15 @@ public class missing_brick_gradle extends b_gradle {
                         }
 
                         if (currentBead.hasSquareStrokes()) {
-                            canvas.drawLine(l + (ri-l) * 0.35f, t + 4, l + (ri-l) * 0.35f, bo - 4, greyLinePaint);
-                            canvas.drawLine(l + (ri-l) * 0.65f, t + 4, l + (ri-l) * 0.65f, bo - 4, whiteLinePaint);
+                            canvas.drawLine(l + 4, t + (bo-t) * 0.35f, ri - 4, t + (bo-t) * 0.35f, greyLinePaint);
+                            canvas.drawLine(l + 4, t + (bo-t) * 0.65f, ri - 4, t + (bo-t) * 0.65f, whiteLinePaint);
                         }
                     } else {
                         cellPaint.setColor(color);
                         drawBead(canvas, l, t, ri, bo, shape, cellPaint);
                     }
                 }
-                canvas.drawRect(c * resolution + xOffset, r * resolution, c * resolution + xOffset + resolution, r * resolution + resolution, paint);
+                canvas.drawRect(c * resolution, r * resolution + yOffset, c * resolution + resolution, r * resolution + yOffset + resolution, paint);
             }
         }
     }
@@ -196,9 +187,8 @@ public class missing_brick_gradle extends b_gradle {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Account for potential extra bead at index 'columns'
-        int desiredWidth = (int) ((columns + 1) * resolution + resolution / 2f);
-        int desiredHeight = rows * resolution;
+        int desiredWidth = columns * resolution;
+        int desiredHeight = (int) (rows * resolution + resolution / 2f);
         setMeasuredDimension(resolveSize(desiredWidth, widthMeasureSpec), 
                              resolveSize(desiredHeight, heightMeasureSpec));
     }

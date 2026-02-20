@@ -39,11 +39,21 @@
         app:tint="#FFFFFF" />
 
     <ImageButton
-        android:id="@+id/btn_header_save"
+        android:id="@+id/btn_header_save_image"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/outline_image_24"
+        app:tint="#FFFFFF"
+        android:contentDescription="Save Image" />
+
+    <ImageButton
+        android:id="@+id/btn_header_save_pattern"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/outline_save_24"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        android:contentDescription="Save Pattern" />
 
 </LinearLayout>

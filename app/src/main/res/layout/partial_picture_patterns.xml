@@ -7,6 +7,16 @@
     android:padding="4dp">
 
     <ImageButton
+        android:id="@+id/btn_math_grid"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:importantForAccessibility="no"
+        app:srcCompat="@drawable/grid_neg"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
         android:id="@+id/btn_vertical_grid"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -24,6 +34,16 @@
         android:background="@android:color/transparent"
         android:importantForAccessibility="no"
         app:srcCompat="@drawable/brick_h_neg"
+        android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/btn_math_grid_2"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:importantForAccessibility="no"
+        app:srcCompat="@drawable/m_grid2_neg"
         android:scaleType="fitCenter" />
 
     <ImageButton

@@ -32,4 +32,13 @@
         android:background="@android:color/transparent"
         app:srcCompat="@drawable/m_grid_neg"
         android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/btn_math_grid_2"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/m_grid2_neg"
+        android:scaleType="fitCenter" />
 </LinearLayout>
