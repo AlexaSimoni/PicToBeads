@@ -1,35 +1,54 @@
 package com.example.pictobeads;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageButton;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 /**
- * MainActivity serves as the entry point of the application, providing navigation to different design modules.
+ * MainActivity serves as the root container for the sliding home screen.
+ * It uses a ViewPager2 to navigate between the start menu and the projects gallery.
  */
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * Initializes the activity, sets the content view, and configures navigation buttons.
-     * Input: savedInstanceState - Bundle containing the activity's previously saved state.
-     * Output: None.
-     * Algorithm: Inflates the activity_start layout, finds the bracelet and picture buttons by their IDs, and attaches click listeners that start their respective activities.
-     */
+    private ViewPager2 viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_main_pager);
 
-        ImageButton btnBracelet = findViewById(R.id.btn_bracelet);
-        ImageButton btnPicture = findViewById(R.id.btn_picture);
+        viewPager = findViewById(R.id.main_view_pager);
+        viewPager.setAdapter(new MainPagerAdapter(this));
+    }
 
-        btnBracelet.setOnClickListener(v -> {
-            startActivity(new Intent(this, BraceletActivity.class));
-        });
+    /**
+     * Programmatically scrolls to the start screen.
+     */
+    public void goToStart() {
+        viewPager.setCurrentItem(0, true);
+    }
 
-        btnPicture.setOnClickListener(v -> {
-            startActivity(new Intent(this, PictureActivity.class));
-        });
+    /**
+     * Programmatically scrolls to the projects gallery.
+     */
+    public void goToProjects() {
+        viewPager.setCurrentItem(1, true);
+    }
+
+    private static class MainPagerAdapter extends FragmentStateAdapter {
+        MainPagerAdapter(FragmentActivity fa) { super(fa); }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return (position == 0) ? new StartFragment() : new ProjectsFragment();
+        }
+
+        @Override
+        public int getItemCount() { return 2; }
     }
 }

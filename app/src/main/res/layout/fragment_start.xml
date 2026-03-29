@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/start_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_blue"
     android:padding="24dp">
 
-    <!-- 1. HEADER SECTION -->
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
@@ -24,12 +21,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <!-- 2. MODE BUTTONS -->
     <ImageButton
         android:id="@+id/btn_bracelet"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="48dp"
         app:srcCompat="@drawable/outline_brush_24"
         android:background="@android:color/transparent"
         app:tint="@android:color/white"
@@ -47,7 +43,7 @@
         android:layout_marginTop="8dp"
         android:text="Bracelet"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_bracelet"
         app:layout_constraintStart_toStartOf="@+id/btn_bracelet"
@@ -55,8 +51,8 @@
 
     <ImageButton
         android:id="@+id/btn_picture"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:srcCompat="@drawable/outline_image_24"
         android:background="@android:color/transparent"
         app:tint="@android:color/white"
@@ -73,22 +69,21 @@
         android:layout_marginTop="8dp"
         android:text="Picture"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_label_bracelet"
         app:layout_constraintEnd_toEndOf="@+id/btn_picture"
         app:layout_constraintStart_toStartOf="@+id/btn_picture"
         app:layout_constraintTop_toTopOf="@+id/tv_label_bracelet" />
 
-    <!-- 3. SWIPE/TRANSITION INDICATOR -->
     <TextView
-        android:id="@+id/tv_swipe_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Swipe up for Saved Projects"
-        android:textColor="#80FFFFFF"
-        android:textSize="12sp"
+        android:text="Swipe left for Projects →"
+        android:textColor="#B3FFFFFF"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
