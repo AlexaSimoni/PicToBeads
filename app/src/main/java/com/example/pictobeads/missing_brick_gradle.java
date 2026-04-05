@@ -73,7 +73,7 @@ public class missing_brick_gradle extends b_gradle {
      * Processes an image to determine grid cell colors, including extra end-beads.
      * Input: bitmap - the source image to be converted.
      * Output: None.
-     * Algorithm: Calculates grid dimensions, iterates through non-missing cells (up to columns index), maps their center to image coordinates, and samples pixel colors.
+     * Algorithm: Calculates grid dimensions, iterates through non-missing cells (up to columns index), maps their center to image coordinates, and samples pixel colors. It then applies color variety limitation.
      */
     @Override
     public void setImageData(Bitmap bitmap) {
@@ -96,6 +96,7 @@ public class missing_brick_gradle extends b_gradle {
                 pixelColors[r][c] = bitmap.getPixel(bX, bY);
             }
         }
+        applyColorQuantization();
         invalidate();
     }
 

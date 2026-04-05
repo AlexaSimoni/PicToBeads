@@ -72,7 +72,7 @@ public class brick_gradle extends b_gradle {
      * Maps image pixels to the staggered grid cells.
      * Input: bitmap - The source bitmap.
      * Output: None.
-     * Algorithm: Iterates through each cell, calculates a staggered (x,y) offset based on row/column index, maps to a (u,v) coordinate, and samples the bitmap.
+     * Algorithm: Iterates through each cell, calculates a staggered (x,y) offset based on row/column index, maps to a (u,v) coordinate, and samples the bitmap. It then applies color variety limitation.
      */
     @Override
     public void setImageData(Bitmap bitmap) {
@@ -98,6 +98,7 @@ public class brick_gradle extends b_gradle {
                 pixelColors[r][c] = bitmap.getPixel(bX, bY);
             }
         }
+        applyColorQuantization();
         invalidate();
     }
 

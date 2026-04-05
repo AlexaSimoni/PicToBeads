@@ -71,7 +71,7 @@ public class vertical_staggered_missing_gradle extends b_gradle {
      * Maps bitmap pixels to grid cells using vertical stagger and missing pattern.
      * Input: bitmap - source image.
      * Output: None.
-     * Algorithm: Calculates bounds, iterates through cells, skips missing ones based on 3-row pattern, and samples image pixels.
+     * Algorithm: Calculates bounds, iterates through cells, skips missing ones based on 3-row pattern, and samples image pixels. It then applies color variety limitation.
      */
     @Override
     public void setImageData(Bitmap bitmap) {
@@ -96,6 +96,7 @@ public class vertical_staggered_missing_gradle extends b_gradle {
                 pixelColors[r][c] = bitmap.getPixel(bX, bY);
             }
         }
+        applyColorQuantization();
         invalidate();
     }
 
