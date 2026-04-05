@@ -38,7 +38,7 @@ import java.util.List;
 import com.example.pictobeads.R;
 
 /**
- * Activity for designing bead bracelets.
+ * Activity for designing bead bracelets. Supports persistent color variety adjustments.
  */
 public class BraceletActivity extends AppCompatActivity {
 
@@ -95,7 +95,7 @@ public class BraceletActivity extends AppCompatActivity {
         headerView.findViewById(R.id.btn_header_save_image).setOnClickListener(v -> saveScreenshotToGallery());
         headerView.findViewById(R.id.btn_header_save_pattern).setOnClickListener(v -> saveProjectForEditing());
 
-        // Color Variety Sidebar Setup
+        // Setup Color Variety Sidebar
         colorVarietyToolbar = findViewById(R.id.color_variety_toolbar);
         tvVarietyValue = findViewById(R.id.tv_variety_value);
         rvPalette = findViewById(R.id.rv_color_palette);
@@ -129,7 +129,6 @@ public class BraceletActivity extends AppCompatActivity {
         FrameLayout sliderContainer = findViewById(R.id.bottom_controls_container);
         View sliderView = LayoutInflater.from(this).inflate(R.layout.partial_width_slider, sliderContainer, true);
         seekWidth = sliderView.findViewById(R.id.seek_control);
-        seekWidth.setProgress((int)braceletWidthMm);
         seekWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar s, int p, boolean f) { if(f) { saveCurrentState(); braceletWidthMm = Math.max(5, p); updateGrid(); } }
             @Override public void onStartTrackingTouch(SeekBar s) {} @Override public void onStopTrackingTouch(SeekBar s) {}
@@ -187,6 +186,7 @@ public class BraceletActivity extends AppCompatActivity {
         this.braceletWidthMm = state.width; this.currentPatternType = state.patternType;
         this.colorLimit = state.colorLimit; this.selectedBead = Bead.getStandardTypes().get(Math.max(0, state.beadIndex));
         seekWidth.setProgress((int)state.width);
+        tvVarietyValue.setText(String.valueOf(colorLimit));
         if (state.bitmap != null) { previewImage.setImageBitmap(state.bitmap); previewImage.setVisibility(View.VISIBLE); }
         else { previewImage.setImageDrawable(null); previewImage.setVisibility(View.GONE); }
         updateGrid(); updatePaletteList();
@@ -248,10 +248,14 @@ public class BraceletActivity extends AppCompatActivity {
                     this.selectedBead = Bead.getStandardTypes().get(Integer.parseInt(parts[3]));
                     if (parts.length > 4) this.colorLimit = Integer.parseInt(parts[4]);
                     seekWidth.setProgress((int)this.braceletWidthMm);
+                    tvVarietyValue.setText(String.valueOf(this.colorLimit));
                 }
             }
             File imgFile = new File(dir, id + ".png");
-            if (imgFile.exists()) { previewImage.setImageBitmap(BitmapFactory.decodeFile(imgFile.getAbsolutePath())); previewImage.setVisibility(View.VISIBLE); }
+            if (imgFile.exists()) {
+                Bitmap b = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                previewImage.setImageBitmap(b); previewImage.setVisibility(View.VISIBLE);
+            }
             updateGrid(); updatePaletteList();
         } catch (Exception e) { e.printStackTrace(); }
         isInternalChange = false;
