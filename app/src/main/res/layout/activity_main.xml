@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#121212"
+    android:fitsSystemWindows="true"
     tools:context="com.example.pictobeads.MainActivity">
 
     <!-- 1. UNIVERSAL HEADER BAR -->
@@ -203,6 +204,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/gradient_blue"
+        android:paddingBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <!-- OPTIONAL PREVIEW OVERLAY -->
