@@ -70,7 +70,8 @@ public class math_gradle extends b_gradle {
      * Samples image colors to populate the mosaic grid.
      * Input: bitmap - source image.
      * Output: None.
-     * Algorithm: Iterates through each cell, calculates proportional coordinates (u,v), samples the nearest bitmap pixel, and stores it in pixelColors.
+     * Algorithm: Iterates through each cell, calculates proportional coordinates (u,v), samples the nearest bitmap pixel, and stores it in pixelColors. 
+     * It then applies color quantization to limit the number of colors.
      */
     @Override
     public void setImageData(Bitmap bitmap) {
@@ -86,6 +87,7 @@ public class math_gradle extends b_gradle {
                 pixelColors[r][c] = bitmap.getPixel(bX, bY);
             }
         }
+        applyColorQuantization();
         invalidate();
     }
 

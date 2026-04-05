@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#1A237E"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Colors variety"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_decrement"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_minus"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Decrease"
+            android:tint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tv_color_value"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="20"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:drawable/editbox_background_normal"
+            android:backgroundTint="#303F9F" />
+
+        <ImageButton
+            android:id="@+id/btn_increment"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_input_add"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Increase"
+            android:tint="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/btn_apply_colors"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_check"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Apply"
+            android:tint="#00FF00" />
+    </LinearLayout>
+
+</LinearLayout>
