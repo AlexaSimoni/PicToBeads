@@ -5,13 +5,11 @@
     android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#17246A"
     android:fitsSystemWindows="true"
-    android:clipChildren="false"
-    android:clipToPadding="false"
     tools:context="com.example.pictobeads.MainActivity">
 
-    <!-- 1. GRID WORKSPACE (The Viewport) - Placed first to be behind -->
+    <!-- 1. GRID WORKSPACE (The Viewport) -->
     <FrameLayout
         android:id="@+id/grid_workspace"
         android:layout_width="0dp"
@@ -25,7 +23,6 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_controls_container">
 
         <!-- THE HOLDER (The movable design surface) -->
-        <!-- Increased padding to allow seeing edges more easily -->
         <FrameLayout
             android:id="@+id/grid_container"
             android:layout_width="wrap_content"
