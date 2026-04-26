@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -38,7 +39,8 @@ import java.util.List;
 import com.example.pictobeads.R;
 
 /**
- * Activity for designing bead bracelets. Supports persistent color variety adjustments.
+ * Activity for designing bead bracelets. Supports movement (panning), undo/redo, 
+ * and color adjustments.
  */
 public class BraceletActivity extends AppCompatActivity {
 
@@ -63,6 +65,10 @@ public class BraceletActivity extends AppCompatActivity {
     private LinearLayout colorVarietyToolbar;
     private TextView tvVarietyValue;
     private RecyclerView rvPalette;
+
+    // Panning variables
+    private float posX = 0, posY = 0;
+    private float lastX, lastY;
 
     private static class BraceletState {
         float width;
@@ -114,9 +120,36 @@ public class BraceletActivity extends AppCompatActivity {
             if (colorLimit > 0) { colorLimit--; tvVarietyValue.setText(String.valueOf(colorLimit)); updateGrid(); updatePaletteList(); }
         });
 
-        gridContainer.setOnClickListener(v -> {
-            if (colorVarietyToolbar.getVisibility() == View.VISIBLE) colorVarietyToolbar.setVisibility(View.GONE);
-        });
+        // Setup Panning Logic on the workspace
+        View workspace = findViewById(R.id.grid_workspace);
+        View.OnTouchListener panListener = (v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    lastX = event.getRawX();
+                    lastY = event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float deltaX = event.getRawX() - lastX;
+                    float deltaY = event.getRawY() - lastY;
+                    posX += deltaX;
+                    posY += deltaY;
+                    gridContainer.setTranslationX(posX);
+                    gridContainer.setTranslationY(posY);
+                    lastX = event.getRawX();
+                    lastY = event.getRawY();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (Math.abs(event.getRawX() - lastX) < 10 && Math.abs(event.getRawY() - lastY) < 10) {
+                        if (colorVarietyToolbar.getVisibility() == View.VISIBLE) colorVarietyToolbar.setVisibility(View.GONE);
+                    }
+                    break;
+            }
+            return true;
+        };
+
+        // Attach panning to workspace AND the container itself so the design is movable
+        workspace.setOnTouchListener(panListener);
+        gridContainer.setOnTouchListener(panListener);
 
         FrameLayout patternContainer = findViewById(R.id.pattern_toolbar_container);
         View patternView = LayoutInflater.from(this).inflate(R.layout.partial_bracelet_patterns, patternContainer, true);
@@ -129,6 +162,7 @@ public class BraceletActivity extends AppCompatActivity {
         FrameLayout sliderContainer = findViewById(R.id.bottom_controls_container);
         View sliderView = LayoutInflater.from(this).inflate(R.layout.partial_width_slider, sliderContainer, true);
         seekWidth = sliderView.findViewById(R.id.seek_control);
+        seekWidth.setProgress((int)braceletWidthMm);
         seekWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar s, int p, boolean f) { if(f) { saveCurrentState(); braceletWidthMm = Math.max(5, p); updateGrid(); } }
             @Override public void onStartTrackingTouch(SeekBar s) {} @Override public void onStopTrackingTouch(SeekBar s) {}
@@ -162,6 +196,7 @@ public class BraceletActivity extends AppCompatActivity {
     private void saveCurrentState() {
         if (isInternalChange) return;
         Bitmap currentBmp = (previewImage.getDrawable() instanceof BitmapDrawable) ? ((BitmapDrawable) previewImage.getDrawable()).getBitmap() : null;
+        int beadIdx = Bead.getStandardTypes().indexOf(selectedBead);
         undoStack.push(new BraceletState(braceletWidthMm, currentPatternType, Bead.getStandardTypes().indexOf(selectedBead), colorLimit, currentBmp));
         redoStack.clear(); if (undoStack.size() > 20) undoStack.removeLast();
     }
@@ -274,6 +309,11 @@ public class BraceletActivity extends AppCompatActivity {
         else if (currentPatternType == 3) currentGridView = new vertical_staggered_missing_gradle(this, cols, rows, res, 1);
         currentGridView.setBead(selectedBead); currentGridView.setMaxColors(colorLimit);
         gridContainer.addView(currentGridView);
+        
+        // Ensure starting position is centered but movable
+        posX = 0; posY = 0;
+        gridContainer.setTranslationX(0); gridContainer.setTranslationY(0);
+
         Bitmap b = (previewImage.getDrawable() instanceof BitmapDrawable) ? ((BitmapDrawable) previewImage.getDrawable()).getBitmap() : null;
         if (b != null) currentGridView.setImageData(b);
     }

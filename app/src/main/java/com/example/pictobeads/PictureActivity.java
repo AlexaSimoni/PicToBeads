@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -42,6 +43,7 @@ import com.example.pictobeads.R;
 
 /**
  * Activity for creating mosaic patterns from images.
+ * Supports free panning (moving) of the entire grid within the workspace.
  */
 public class PictureActivity extends AppCompatActivity {
 
@@ -68,6 +70,10 @@ public class PictureActivity extends AppCompatActivity {
     private LinearLayout colorVarietyToolbar;
     private TextView tvVarietyValue;
     private RecyclerView rvPalette;
+
+    // Panning variables
+    private float posX = 0, posY = 0;
+    private float lastX, lastY;
 
     private static class PictureState {
         float width, height, zoom;
@@ -117,12 +123,35 @@ public class PictureActivity extends AppCompatActivity {
             if (colorLimit > 0) { colorLimit--; tvVarietyValue.setText(String.valueOf(colorLimit)); updateGrid(); updatePaletteList(); }
         });
 
-        // Hide toolbar when grid is tapped
-        gridContainer.setOnClickListener(v -> {
-            if (colorVarietyToolbar.getVisibility() == View.VISIBLE) {
-                colorVarietyToolbar.setVisibility(View.GONE);
+        // Setup Movement (Panning) Logic
+        View.OnTouchListener panListener = (v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    lastX = event.getRawX();
+                    lastY = event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float deltaX = event.getRawX() - lastX;
+                    float deltaY = event.getRawY() - lastY;
+                    posX += deltaX;
+                    posY += deltaY;
+                    gridContainer.setTranslationX(posX);
+                    gridContainer.setTranslationY(posY);
+                    lastX = event.getRawX();
+                    lastY = event.getRawY();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (Math.abs(event.getRawX() - lastX) < 10 && Math.abs(event.getRawY() - lastY) < 10) {
+                        if (colorVarietyToolbar.getVisibility() == View.VISIBLE) colorVarietyToolbar.setVisibility(View.GONE);
+                    }
+                    break;
             }
-        });
+            return true;
+        };
+
+        // Apply to both workspace and container to ensure grid is draggable
+        findViewById(R.id.grid_workspace).setOnTouchListener(panListener);
+        gridContainer.setOnTouchListener(panListener);
 
         // Pattern and Controls Setup
         View patternView = LayoutInflater.from(this).inflate(R.layout.partial_picture_patterns, (FrameLayout)findViewById(R.id.pattern_toolbar_container), true);
@@ -298,6 +327,12 @@ public class PictureActivity extends AppCompatActivity {
         currentGridView.setRemoveBackground(isRemoveBgActive);
         currentGridView.setMaxColors(colorLimit);
         gridContainer.addView(currentGridView);
+        
+        // Ensure design starts visible at center but can pan to edges
+        posX = 0; posY = 0;
+        gridContainer.setTranslationX(0);
+        gridContainer.setTranslationY(0);
+
         Bitmap b = (previewImage.getDrawable() instanceof BitmapDrawable) ? ((BitmapDrawable) previewImage.getDrawable()).getBitmap() : null;
         if (b != null) currentGridView.setImageData(b);
     }

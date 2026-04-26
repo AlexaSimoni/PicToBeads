@@ -1,8 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PicToBeads" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Status and Navigation bar color -->
+        <item name="android:statusBarColor">#17246A</item>
+        <item name="android:navigationBarColor">#17246A</item>
+
+        <!-- Force opaque system bars -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <!-- Ensure icons are white (for dark background) -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+
+        <!-- Root window background -->
+        <item name="android:windowBackground">#17246A</item>
     </style>
 
     <style name="Theme.PicToBeads" parent="Base.Theme.PicToBeads" />
